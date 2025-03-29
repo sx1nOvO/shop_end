@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.UserMapper">
+
+    <sql id="Base_Column_List">
+        user.id,
+        user.image,
+        user.phone,
+        user.password,
+        user.realname,
+        user.sex,
+        user.age,
+        user.address,
+        user.create_time createTime
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.User" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from user
+        <where>
+        <if test="id != null and id != '' ">
+            and user.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and user.image = #{image}
+        </if>
+        <if test="phone != null and phone != '' ">
+            and user.phone like concat('%',#{phone},'%')
+        </if>
+        <if test="password != null and password != '' ">
+            and user.password = #{password}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        <if test="sex != null and sex != '' ">
+            and user.sex = #{sex}
+        </if>
+        <if test="age != null and age != '' ">
+            and user.age = #{age}
+        </if>
+        <if test="address != null and address != '' ">
+            and user.address = #{address}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and user.create_time = #{create_time}
+        </if>
+        </where>
+        order by user.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.User">
+        select 
+        <include refid="Base_Column_List" /> 
+        from user
+        <where>
+        <if test="id != null and id != '' ">
+            and user.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and user.image = #{image}
+        </if>
+        <if test="phone != null and phone != '' ">
+            and user.phone like concat('%',#{phone},'%')
+        </if>
+        <if test="password != null and password != '' ">
+            and user.password = #{password}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        <if test="sex != null and sex != '' ">
+            and user.sex = #{sex}
+        </if>
+        <if test="age != null and age != '' ">
+            and user.age = #{age}
+        </if>
+        <if test="address != null and address != '' ">
+            and user.address = #{address}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and user.create_time = #{create_time}
+        </if>
+        </where>
+        order by user.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.User">
+        select 
+        <include refid="Base_Column_List" /> 
+        from user
+        where user.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.User" keyProperty="id" useGeneratedKeys="true">
+        insert into user(
+          id,
+          image,
+          phone,
+          password,
+          realname,
+          sex,
+          age,
+          address,
+          create_time
+        )values( 
+          #{id},
+          #{image},
+          #{phone},
+          #{password},
+          #{realname},
+          #{sex},
+          #{age},
+          #{address},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.User">
+        update user
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="image != null">
+              image = #{image},
+          </if>
+          <if test="phone != null">
+              phone = #{phone},
+          </if>
+          <if test="password != null">
+              password = #{password},
+          </if>
+          <if test="realname != null">
+              realname = #{realname},
+          </if>
+          <if test="sex != null">
+              sex = #{sex},
+          </if>
+          <if test="age != null">
+              age = #{age},
+          </if>
+          <if test="address != null">
+              address = #{address},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from user where id=#{id}
+    </delete>
+
+</mapper>

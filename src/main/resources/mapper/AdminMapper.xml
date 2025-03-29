@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.AdminMapper">
+
+    <sql id="Base_Column_List">
+        admin.id,
+        admin.image,
+        admin.username,
+        admin.password,
+        admin.create_time createTime
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Admin" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from admin
+        <where>
+        <if test="id != null and id != '' ">
+            and admin.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and admin.image = #{image}
+        </if>
+        <if test="username != null and username != '' ">
+            and admin.username like concat('%',#{username},'%')
+        </if>
+        <if test="password != null and password != '' ">
+            and admin.password = #{password}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and admin.create_time = #{create_time}
+        </if>
+        </where>
+        order by admin.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Admin">
+        select 
+        <include refid="Base_Column_List" /> 
+        from admin
+        <where>
+        <if test="id != null and id != '' ">
+            and admin.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and admin.image = #{image}
+        </if>
+        <if test="username != null and username != '' ">
+            and admin.username like concat('%',#{username},'%')
+        </if>
+        <if test="password != null and password != '' ">
+            and admin.password = #{password}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and admin.create_time = #{create_time}
+        </if>
+        </where>
+        order by admin.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Admin">
+        select 
+        <include refid="Base_Column_List" /> 
+        from admin
+        where admin.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Admin" keyProperty="id" useGeneratedKeys="true">
+        insert into admin(
+          id,
+          image,
+          username,
+          password,
+          create_time
+        )values( 
+          #{id},
+          #{image},
+          #{username},
+          #{password},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Admin">
+        update admin
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="image != null">
+              image = #{image},
+          </if>
+          <if test="username != null">
+              username = #{username},
+          </if>
+          <if test="password != null">
+              password = #{password},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from admin where id=#{id}
+    </delete>
+
+</mapper>

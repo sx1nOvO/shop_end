@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.GoodsMapper">
+
+    <sql id="Base_Column_List">
+        goods.id,
+        goods.cid,
+        goods.image,
+        goods.name,
+        goods.remark,
+        goods.money,
+        goods.num,
+        goods.content,
+        goods.status,
+        goods.create_time createTime,
+        category.name categoryName,
+        (select count(1) from order_item t where t.gid =  goods.id) sale
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Goods" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from goods
+        left join category on goods.cid = category.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and goods.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and goods.cid = #{cid}
+        </if>
+        <if test="image != null and image != '' ">
+            and goods.image = #{image}
+        </if>
+        <if test="name != null and name != '' ">
+            and goods.name like concat('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and goods.remark = #{remark}
+        </if>
+        <if test="money == 1">
+            and goods.money &lt; 100
+        </if>
+        <if test="money == 2">
+            and (goods.money between 100 and 300)
+        </if>
+        <if test="money == 3">
+            and (goods.money between 300 and 500)
+        </if>
+        <if test="money == 4">
+            and (goods.money between 500 and 1000)
+        </if>
+        <if test="money == 5">
+            and goods.money &gt; 1000
+        </if>
+        <if test="num != null and num != '' ">
+            and goods.num = #{num}
+        </if>
+        <if test="content != null and content != '' ">
+            and goods.content = #{content}
+        </if>
+        <if test="status != null and status != '' ">
+            and goods.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and goods.create_time = #{create_time}
+        </if>
+        <if test="categoryName != null and categoryName != '' ">
+            and category.name like concat('%',#{categoryName},'%')
+        </if>
+        </where>
+        <if test="sortBy == 1">
+            order by goods.name
+        </if>
+        <if test="sortBy == 2">
+            order by goods.money+0
+        </if>
+        <if test="sortBy == 3">
+            order by goods.money+0 desc
+        </if>
+        <if test="sortBy == 4">
+            order by sale desc
+        </if>
+        <if test="sortBy == 5">
+            order by goods.create_time desc
+        </if>
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Goods">
+        select 
+        <include refid="Base_Column_List" /> 
+        from goods
+        left join category on goods.cid = category.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and goods.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and goods.cid = #{cid}
+        </if>
+        <if test="image != null and image != '' ">
+            and goods.image = #{image}
+        </if>
+        <if test="name != null and name != '' ">
+            and goods.name like concat('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and goods.remark = #{remark}
+        </if>
+        <if test="money != null and money != '' ">
+            and goods.money = #{money}
+        </if>
+        <if test="num != null and num != '' ">
+            and goods.num = #{num}
+        </if>
+        <if test="content != null and content != '' ">
+            and goods.content = #{content}
+        </if>
+        <if test="status != null and status != '' ">
+            and goods.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and goods.create_time = #{create_time}
+        </if>
+        <if test="categoryName != null and categoryName != '' ">
+            and category.name like concat('%',#{categoryName},'%')
+        </if>
+        </where>
+        order by goods.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Goods">
+        select 
+        <include refid="Base_Column_List" /> 
+        from goods
+        left join category on goods.cid = category.id 
+        where goods.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Goods" keyProperty="id" useGeneratedKeys="true">
+        insert into goods(
+          id,
+          cid,
+          image,
+          name,
+          remark,
+          money,
+          num,
+          content,
+          status,
+          create_time
+        )values( 
+          #{id},
+          #{cid},
+          #{image},
+          #{name},
+          #{remark},
+          #{money},
+          #{num},
+          #{content},
+          #{status},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Goods">
+        update goods
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="cid != null">
+              cid = #{cid},
+          </if>
+          <if test="image != null">
+              image = #{image},
+          </if>
+          <if test="name != null">
+              name = #{name},
+          </if>
+          <if test="remark != null">
+              remark = #{remark},
+          </if>
+          <if test="money != null">
+              money = #{money},
+          </if>
+          <if test="num != null">
+              num = #{num},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+          <if test="status != null">
+              status = #{status},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from goods where id=#{id}
+    </delete>
+
+</mapper>

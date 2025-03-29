@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.ReviewMapper">
+
+    <sql id="Base_Column_List">
+        review.id,
+        review.gid,
+        review.uid,
+        review.content,
+        review.create_time createTime,
+        goods.name goodsName,
+        user.realname realname,
+        user.image userImage
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Review" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from review
+        left join goods on review.gid = goods.id 
+        left join user on review.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and review.id = #{id}
+        </if>
+        <if test="gid != null and gid != '' ">
+            and review.gid = #{gid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and review.uid = #{uid}
+        </if>
+        <if test="content != null and content != '' ">
+            and review.content = #{content}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and review.create_time = #{create_time}
+        </if>
+        <if test="goodsName != null and goodsName != '' ">
+            and goods.name like concat('%',#{goodsName},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by review.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Review">
+        select 
+        <include refid="Base_Column_List" /> 
+        from review
+        left join goods on review.gid = goods.id 
+        left join user on review.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and review.id = #{id}
+        </if>
+        <if test="gid != null and gid != '' ">
+            and review.gid = #{gid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and review.uid = #{uid}
+        </if>
+        <if test="content != null and content != '' ">
+            and review.content = #{content}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and review.create_time = #{create_time}
+        </if>
+        <if test="goodsName != null and goodsName != '' ">
+            and goods.name like concat('%',#{goodsName},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by review.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Review">
+        select 
+        <include refid="Base_Column_List" /> 
+        from review
+        left join goods on review.gid = goods.id 
+        left join user on review.uid = user.id 
+        where review.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Review" keyProperty="id" useGeneratedKeys="true">
+        insert into review(
+          id,
+          gid,
+          uid,
+          content,
+          create_time
+        )values( 
+          #{id},
+          #{gid},
+          #{uid},
+          #{content},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Review">
+        update review
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="gid != null">
+              gid = #{gid},
+          </if>
+          <if test="uid != null">
+              uid = #{uid},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from review where id=#{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.DiscussMapper">
+
+    <sql id="Base_Column_List">
+        discuss.id,
+        discuss.oid,
+        discuss.uid,
+        discuss.content,
+        discuss.reply,
+        discuss.create_time createTime,
+        outfit.name outfitName,
+        user.realname realname,
+        user.image userImage
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Discuss" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from discuss
+        left join outfit on discuss.oid = outfit.id 
+        left join user on discuss.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and discuss.id = #{id}
+        </if>
+        <if test="oid != null and oid != '' ">
+            and discuss.oid = #{oid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and discuss.uid = #{uid}
+        </if>
+        <if test="uid2 != null and uid2 != '' ">
+            and (discuss.uid = #{uid2} or outfit.uid = #{uid2})
+        </if>
+        <if test="content != null and content != '' ">
+            and discuss.content = #{content}
+        </if>
+        <if test="reply != null and reply != '' ">
+            and discuss.reply = #{reply}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and discuss.create_time = #{create_time}
+        </if>
+        <if test="outfitName != null and outfitName != '' ">
+            and outfit.name like concat('%',#{outfitName},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by discuss.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Discuss">
+        select 
+        <include refid="Base_Column_List" /> 
+        from discuss
+        left join outfit on discuss.oid = outfit.id 
+        left join user on discuss.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and discuss.id = #{id}
+        </if>
+        <if test="oid != null and oid != '' ">
+            and discuss.oid = #{oid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and discuss.uid = #{uid}
+        </if>
+        <if test="content != null and content != '' ">
+            and discuss.content = #{content}
+        </if>
+        <if test="reply != null and reply != '' ">
+            and discuss.reply = #{reply}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and discuss.create_time = #{create_time}
+        </if>
+        <if test="outfitName != null and outfitName != '' ">
+            and outfit.name like concat('%',#{outfitName},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by discuss.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Discuss">
+        select 
+        <include refid="Base_Column_List" /> 
+        from discuss
+        left join outfit on discuss.oid = outfit.id 
+        left join user on discuss.uid = user.id 
+        where discuss.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Discuss" keyProperty="id" useGeneratedKeys="true">
+        insert into discuss(
+          id,
+          oid,
+          uid,
+          content,
+          reply,
+          create_time
+        )values( 
+          #{id},
+          #{oid},
+          #{uid},
+          #{content},
+          #{reply},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Discuss">
+        update discuss
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="oid != null">
+              oid = #{oid},
+          </if>
+          <if test="uid != null">
+              uid = #{uid},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+          <if test="reply != null">
+              reply = #{reply},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from discuss where id=#{id}
+    </delete>
+
+</mapper>

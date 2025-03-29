@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.StarsMapper">
+
+    <sql id="Base_Column_List">
+        stars.id,
+        stars.fid,
+        stars.uid,
+        stars.create_time createTime,
+        forum.title forumTitle,
+        user.realname realname
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Stars" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from stars
+        left join forum on stars.fid = forum.id 
+        left join user on stars.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and stars.id = #{id}
+        </if>
+        <if test="fid != null and fid != '' ">
+            and stars.fid = #{fid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and stars.uid = #{uid}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and stars.create_time = #{create_time}
+        </if>
+        <if test="forumTitle != null and forumTitle != '' ">
+            and forum.title like concat('%',#{forumTitle},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by stars.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Stars">
+        select 
+        <include refid="Base_Column_List" /> 
+        from stars
+        left join forum on stars.fid = forum.id 
+        left join user on stars.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and stars.id = #{id}
+        </if>
+        <if test="fid != null and fid != '' ">
+            and stars.fid = #{fid}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and stars.uid = #{uid}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and stars.create_time = #{create_time}
+        </if>
+        <if test="forumTitle != null and forumTitle != '' ">
+            and forum.title like concat('%',#{forumTitle},'%')
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by stars.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Stars">
+        select 
+        <include refid="Base_Column_List" /> 
+        from stars
+        left join forum on stars.fid = forum.id 
+        left join user on stars.uid = user.id 
+        where stars.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Stars" keyProperty="id" useGeneratedKeys="true">
+        insert into stars(
+          id,
+          fid,
+          uid,
+          create_time
+        )values( 
+          #{id},
+          #{fid},
+          #{uid},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Stars">
+        update stars
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="fid != null">
+              fid = #{fid},
+          </if>
+          <if test="uid != null">
+              uid = #{uid},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from stars where id=#{id}
+    </delete>
+
+</mapper>

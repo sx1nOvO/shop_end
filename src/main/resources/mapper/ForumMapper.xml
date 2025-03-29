@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.ForumMapper">
+
+    <sql id="Base_Column_List">
+        forum.id,
+        forum.title,
+        forum.content,
+        forum.uid,
+        forum.create_time createTime,
+        user.realname realname,
+        user.image userImage,
+        (select count(1) from stars where stars.fid = forum.id) num,
+        (select count(1) from comment where comment.fid = forum.id) num2
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Forum" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from forum
+        left join user on forum.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and forum.id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and forum.title like concat('%',#{title},'%')
+        </if>
+        <if test="content != null and content != '' ">
+            and forum.content = #{content}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and forum.uid = #{uid}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and forum.create_time = #{create_time}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        <if test="sortBy == 'newest'">
+            order by forum.create_time desc
+        </if>
+        <if test="sortBy == 'hot'">
+            order by num desc
+        </if>
+        <if test="sortBy == 'comment'">
+            order by num2 desc
+        </if>
+    </select>
+
+    <select id="recommend" resultType="com.mty.entity.Forum" parameterType="map">
+        select
+        <include refid="Base_Column_List" />
+        from forum
+        left join user on forum.uid = user.id
+        order by num desc
+        limit 10
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Forum">
+        select 
+        <include refid="Base_Column_List" /> 
+        from forum
+        left join user on forum.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and forum.id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and forum.title like concat('%',#{title},'%')
+        </if>
+        <if test="content != null and content != '' ">
+            and forum.content = #{content}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and forum.uid = #{uid}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and forum.create_time = #{create_time}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by forum.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Forum">
+        select 
+        <include refid="Base_Column_List" /> 
+        from forum
+        left join user on forum.uid = user.id 
+        where forum.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Forum" keyProperty="id" useGeneratedKeys="true">
+        insert into forum(
+          id,
+          title,
+          content,
+          uid,
+          create_time
+        )values( 
+          #{id},
+          #{title},
+          #{content},
+          #{uid},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Forum">
+        update forum
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="title != null">
+              title = #{title},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+          <if test="uid != null">
+              uid = #{uid},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from forum where id=#{id}
+    </delete>
+
+</mapper>

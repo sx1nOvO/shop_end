@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.OrdersMapper">
+
+    <sql id="Base_Column_List">
+        orders.id,
+        orders.no,
+        orders.num,
+        orders.total,
+        orders.uid,
+        orders.remark,
+        orders.status,
+        orders.create_time createTime,
+        user.realname realname,
+        user.phone phone,
+        user.address address
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.Orders" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from orders
+        left join user on orders.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and orders.id = #{id}
+        </if>
+        <if test="no != null and no != '' ">
+            and orders.no like concat('%',#{no},'%')
+        </if>
+        <if test="num != null and num != '' ">
+            and orders.num = #{num}
+        </if>
+        <if test="total != null and total != '' ">
+            and orders.total = #{total}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and orders.uid = #{uid}
+        </if>
+        <if test="remark != null and remark != '' ">
+            and orders.remark = #{remark}
+        </if>
+        <if test="status != null and status != '' ">
+            and orders.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and orders.create_time = #{create_time}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by orders.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.Orders">
+        select 
+        <include refid="Base_Column_List" /> 
+        from orders
+        left join user on orders.uid = user.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and orders.id = #{id}
+        </if>
+        <if test="no != null and no != '' ">
+            and orders.no like concat('%',#{no},'%')
+        </if>
+        <if test="num != null and num != '' ">
+            and orders.num = #{num}
+        </if>
+        <if test="total != null and total != '' ">
+            and orders.total = #{total}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and orders.uid = #{uid}
+        </if>
+        <if test="remark != null and remark != '' ">
+            and orders.remark = #{remark}
+        </if>
+        <if test="status != null and status != '' ">
+            and orders.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and orders.create_time = #{create_time}
+        </if>
+        <if test="realname != null and realname != '' ">
+            and user.realname like concat('%',#{realname},'%')
+        </if>
+        </where>
+        order by orders.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.Orders">
+        select 
+        <include refid="Base_Column_List" /> 
+        from orders
+        left join user on orders.uid = user.id 
+        where orders.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.Orders" keyProperty="id" useGeneratedKeys="true">
+        insert into orders(
+          id,
+          no,
+          num,
+          total,
+          uid,
+          remark,
+          status,
+          create_time
+        )values( 
+          #{id},
+          #{no},
+          #{num},
+          #{total},
+          #{uid},
+          #{remark},
+          #{status},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.Orders">
+        update orders
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="no != null">
+              no = #{no},
+          </if>
+          <if test="num != null">
+              num = #{num},
+          </if>
+          <if test="total != null">
+              total = #{total},
+          </if>
+          <if test="uid != null">
+              uid = #{uid},
+          </if>
+          <if test="remark != null">
+              remark = #{remark},
+          </if>
+          <if test="status != null">
+              status = #{status},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from orders where id=#{id}
+    </delete>
+
+</mapper>

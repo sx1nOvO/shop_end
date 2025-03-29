@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mty.mapper.OrderItemMapper">
+
+    <sql id="Base_Column_List">
+        order_item.id,
+        order_item.oid,
+        order_item.gid,
+        order_item.num,
+        order_item.money,
+        order_item.create_time createTime,
+        orders.no ordersNo,
+        orders.status status,
+        goods.name goodsName
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.mty.entity.OrderItem" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from order_item
+        left join orders on order_item.oid = orders.id 
+        left join goods on order_item.gid = goods.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and order_item.id = #{id}
+        </if>
+        <if test="oid != null and oid != '' ">
+            and order_item.oid = #{oid}
+        </if>
+        <if test="gid != null and gid != '' ">
+            and order_item.gid = #{gid}
+        </if>
+        <if test="num != null and num != '' ">
+            and order_item.num = #{num}
+        </if>
+        <if test="money != null and money != '' ">
+            and order_item.money = #{money}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and order_item.create_time = #{create_time}
+        </if>
+        <if test="ordersNo != null and ordersNo != '' ">
+            and orders.no like concat('%',#{ordersNo},'%')
+        </if>
+        <if test="goodsName != null and goodsName != '' ">
+            and goods.name like concat('%',#{goodsName},'%')
+        </if>
+        </where>
+        order by order_item.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.mty.entity.OrderItem">
+        select 
+        <include refid="Base_Column_List" /> 
+        from order_item
+        left join orders on order_item.oid = orders.id 
+        left join goods on order_item.gid = goods.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and order_item.id = #{id}
+        </if>
+        <if test="oid != null and oid != '' ">
+            and order_item.oid = #{oid}
+        </if>
+        <if test="gid != null and gid != '' ">
+            and order_item.gid = #{gid}
+        </if>
+        <if test="num != null and num != '' ">
+            and order_item.num = #{num}
+        </if>
+        <if test="money != null and money != '' ">
+            and order_item.money = #{money}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and order_item.create_time = #{create_time}
+        </if>
+        <if test="ordersNo != null and ordersNo != '' ">
+            and orders.no like concat('%',#{ordersNo},'%')
+        </if>
+        <if test="goodsName != null and goodsName != '' ">
+            and goods.name like concat('%',#{goodsName},'%')
+        </if>
+        </where>
+        order by order_item.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.mty.entity.OrderItem">
+        select 
+        <include refid="Base_Column_List" /> 
+        from order_item
+        left join orders on order_item.oid = orders.id 
+        left join goods on order_item.gid = goods.id 
+        where order_item.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.mty.entity.OrderItem" keyProperty="id" useGeneratedKeys="true">
+        insert into order_item(
+          id,
+          oid,
+          gid,
+          num,
+          money,
+          create_time
+        )values( 
+          #{id},
+          #{oid},
+          #{gid},
+          #{num},
+          #{money},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.mty.entity.OrderItem">
+        update order_item
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="oid != null">
+              oid = #{oid},
+          </if>
+          <if test="gid != null">
+              gid = #{gid},
+          </if>
+          <if test="num != null">
+              num = #{num},
+          </if>
+          <if test="money != null">
+              money = #{money},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from order_item where id=#{id}
+    </delete>
+
+</mapper>
